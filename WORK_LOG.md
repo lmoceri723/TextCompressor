@@ -1,9 +1,10 @@
 Name: YOUR NAME HERE
 
-| Date    |  Time  |                                     Update |
-|:--------|:------:|-------------------------------------------:|
-| April 5 | 9-10pm | I tried to write abstract, efficient code. |
-|         |        |                                            |
+| Date |    Time    |                                                                                                                                                                                                                                                                                       Update |
+|:-----|:----------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| 12/2 | 2:00-2:30  |                                                                                                                                                   I listened to Mr. Blick's presentation on the problem set. We spent about 10-15 mins afterwards brainstorming solutions on the whiteboard. |
+| 12/2 | 2:30-3:00  |                                                                           I spent this time brainstorming a solution where I would use a hashmap to store common sequences of characters and then replace them with shorter codes. I cloned the repository and started making a mental plan. |
+| 12/3 | 12:35-1:05 | I discussed the problem with my classmates, brainstormed solutions, and then wrote out a plan for compressing. I plan to find the most repeated sequences in the full text (maybe I'll limit to some percent if it takes too long), then I'll use those to make codes that can replace them. |
 
 
-To add a new row to the table, click into a cell and then hit shift-enter.
+To add a new r4w to the table, click into a cell and then hit shift-enter.
