@@ -33,9 +33,23 @@ import java.util.Map;
 public class TextCompressor {
 
     private static final int MAX_SEQUENCE_LENGTH = 10;
+    private static final int MAX_CODE_LENGTH = 8;
 
     private static Map<String, Integer> sequenceCounts = new HashMap<>();
+    private static Map<String, Integer> sequenceToCode = new HashMap<>();
 
+    private static void buildTable(String input) {
+        for (int i = 0; i < input.length(); i++) {
+            for (int j = i + 1; j <= input.length() && j <= i + MAX_SEQUENCE_LENGTH; j++) {
+                String sequence = input.substring(i, j);
+                sequenceCounts.put(sequence, sequenceCounts.getOrDefault(sequence, 0) + 1);
+            }
+        }
+
+        // Get the 2^n most common sequences
+        
+
+    }
 
     private static void compress() {
 
