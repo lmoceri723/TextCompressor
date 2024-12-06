@@ -39,6 +39,7 @@ public class TextCompressor {
 
     private static Map<String, Integer> sequenceCounts = new HashMap<>();
     private static Map<String, Integer> sequenceToCode = new HashMap<>();
+    private static Map<Integer, String> codeToSequence = new HashMap<>();
 
     private static void buildTable(String input) {
         for (int i = 0; i < input.length(); i++) {
@@ -61,26 +62,60 @@ public class TextCompressor {
     }
 
     private static void compress() {
+        String input = BinaryStdIn.readString();
+        buildTable(input);
 
-        // Plan:
-        // 1. Read in the entire input file as a string
-        // 2. For each character in the string, create a sequence of characters up to length 10
-        // 3. If the sequence is not in the map, add it with a count of 1
-        // 4. If the sequence is in the map, increment the count
-        // 5. Figure out some way to choose an optimal size for the codes corresponding to each sequence
-        // 6. Find the 2^n most common sequences and assign them codes of length n
-        // 7. Create a header with this information
-        // 8. Write the header to the output file
-        // 9. Compress using the codes
+        // Write the size of the sequenceToCode map
+        BinaryStdOut.write(sequenceToCode.size());
 
-        // TODO: Complete the compress() method
+        // Write the sequenceToCode map
+        for (String sequence : sequenceToCode.keySet()) {
+            BinaryStdOut.write(sequence);
+            BinaryStdOut.write(sequenceToCode.get(sequence), MAX_CODE_LENGTH);
+        }
+
+        // Write the compressed data
+        for (int i = 0; i < input.length(); ) {
+            boolean found = false;
+            for (int j = i; j < input.length() && j < i + MAX_SEQUENCE_LENGTH; j++) {
+                String sequence = input.substring(i, j + 1);
+                if (sequenceToCode.containsKey(sequence)) {
+                    BinaryStdOut.write(sequenceToCode.get(sequence), MAX_CODE_LENGTH);
+                    i = j + 1;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                BinaryStdOut.write(input.charAt(i));
+                i++;
+            }
+        }
 
         BinaryStdOut.close();
     }
 
     private static void expand() {
+        // Read the size of the codeToSequence map
+        int size = BinaryStdIn.readInt(MAX_CODE_LENGTH);
 
-        // TODO: Complete the expand() method
+        // Read the codeToSequence map
+        for (int i = 0; i < size; i++) {
+            String sequence = BinaryStdIn.readString();
+            int code = BinaryStdIn.readInt(MAX_CODE_LENGTH);
+            codeToSequence.put(code, sequence);
+        }
+
+        // Read and write the compressed data
+        while (!BinaryStdIn.isEmpty()) {
+            int code = BinaryStdIn.readInt(MAX_CODE_LENGTH);
+            if (codeToSequence.containsKey(code)) {
+                String sequence = codeToSequence.get(code);
+                BinaryStdOut.write(sequence);
+            } else {
+                BinaryStdOut.write((char) code);
+            }
+        }
 
         BinaryStdOut.close();
     }
@@ -91,3 +126,4 @@ public class TextCompressor {
         else throw new IllegalArgumentException("Illegal command line argument");
     }
 }
+
