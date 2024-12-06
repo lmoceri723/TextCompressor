@@ -21,7 +21,9 @@
  *  = 43.54% compression ratio!
  ******************************************************************************/
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,8 +49,15 @@ public class TextCompressor {
         }
 
         // Get the 2^n most common sequences
-        
+        int limit = (int) Math.pow(2, MAX_CODE_LENGTH);
+        List<String> sequences = new ArrayList<>(sequenceCounts.keySet());
+        // Used https://stackoverflow.com/questions/2839137/how-to-use-comparator-in-java-to-sort
+        // To learn how to do this part
+        sequences.sort((a, b) -> sequenceCounts.get(b) - sequenceCounts.get(a));
 
+        for (int i = 0; i < limit; i++) {
+            sequenceToCode.put(sequences.get(i), i);
+        }
     }
 
     private static void compress() {
