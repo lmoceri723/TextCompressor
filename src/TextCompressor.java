@@ -21,11 +21,6 @@
  *  = 43.54% compression ratio!
  ******************************************************************************/
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  *  The {@code TextCompressor} class provides static methods for compressing
  *  and expanding natural language through textfile input.
@@ -34,90 +29,41 @@ import java.util.Map;
  */
 public class TextCompressor {
 
-    private static final int MAX_SEQUENCE_LENGTH = 10;
-    private static final int MAX_CODE_LENGTH = 8;
+    static TST tst;
+    static final int CODE_SIZE = 12;
+    static int code = 256;
 
-    private static Map<String, Integer> sequenceCounts = new HashMap<>();
-    private static Map<String, Integer> sequenceToCode = new HashMap<>();
-    private static Map<Integer, String> codeToSequence = new HashMap<>();
+    /*
+        read data into String text
+index = 0
+while index < text.length:
+	prefix = longest coded word that matches text @ index
+	write out that code
+	if possible, look ahead to the next character
+	append that character to prefix
+	associate prefix with the next code (if available)
+	index += prefix.length
+write out EOF and close
 
-    private static void buildTable(String input) {
-        for (int i = 0; i < input.length(); i++) {
-            for (int j = i + 1; j <= input.length() && j <= i + MAX_SEQUENCE_LENGTH; j++) {
-                String sequence = input.substring(i, j);
-                sequenceCounts.put(sequence, sequenceCounts.getOrDefault(sequence, 0) + 1);
-            }
-        }
-
-        // Get the 2^n most common sequences
-        int limit = (int) Math.pow(2, MAX_CODE_LENGTH);
-        List<String> sequences = new ArrayList<>(sequenceCounts.keySet());
-        // Used https://stackoverflow.com/questions/2839137/how-to-use-comparator-in-java-to-sort
-        // To learn how to do this part
-        sequences.sort((a, b) -> sequenceCounts.get(b) - sequenceCounts.get(a));
-
-        for (int i = 0; i < limit; i++) {
-            sequenceToCode.put(sequences.get(i), i);
-        }
-    }
-
+     */
     private static void compress() {
         String input = BinaryStdIn.readString();
-        buildTable(input);
-
-        // Write the size of the sequenceToCode map
-        BinaryStdOut.write(sequenceToCode.size());
-
-        // Write the sequenceToCode map
-        for (String sequence : sequenceToCode.keySet()) {
-            BinaryStdOut.write(sequence);
-            BinaryStdOut.write(sequenceToCode.get(sequence), MAX_CODE_LENGTH);
-        }
-
-        // Write the compressed data
-        for (int i = 0; i < input.length(); ) {
-            boolean found = false;
-            for (int j = i; j < input.length() && j < i + MAX_SEQUENCE_LENGTH; j++) {
-                String sequence = input.substring(i, j + 1);
-                if (sequenceToCode.containsKey(sequence)) {
-                    BinaryStdOut.write(sequenceToCode.get(sequence), MAX_CODE_LENGTH);
-                    i = j + 1;
-                    found = true;
-                    break;
-                }
+        int index = 0;
+        while (index < input.length()) {
+            String prefix = tst.getLongestPrefix(input.substring(index));
+            int code = tst.lookup(prefix);
+            BinaryStdOut.write(code, CODE_SIZE);
+            if (index + prefix.length() < input.length()) {
+                prefix += input.charAt(index + prefix.length());
+                tst.insert(prefix, code);
+                code++;
             }
-            if (!found) {
-                BinaryStdOut.write(input.charAt(i));
-                i++;
-            }
+            index += prefix.length();
         }
-
-        BinaryStdOut.close();
     }
 
     private static void expand() {
-        // Read the size of the codeToSequence map
-        int size = BinaryStdIn.readInt(MAX_CODE_LENGTH);
 
-        // Read the codeToSequence map
-        for (int i = 0; i < size; i++) {
-            String sequence = BinaryStdIn.readString();
-            int code = BinaryStdIn.readInt(MAX_CODE_LENGTH);
-            codeToSequence.put(code, sequence);
-        }
-
-        // Read and write the compressed data
-        while (!BinaryStdIn.isEmpty()) {
-            int code = BinaryStdIn.readInt(MAX_CODE_LENGTH);
-            if (codeToSequence.containsKey(code)) {
-                String sequence = codeToSequence.get(code);
-                BinaryStdOut.write(sequence);
-            } else {
-                BinaryStdOut.write((char) code);
-            }
-        }
-
-        BinaryStdOut.close();
     }
 
     public static void main(String[] args) {
