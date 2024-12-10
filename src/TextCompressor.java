@@ -31,7 +31,8 @@ public class TextCompressor {
 
     static TST tst;
     static final int CODE_SIZE = 12;
-    static int code = 256;
+    static int code = 257;
+    static final int EOF = 256;
 
     /*
         read data into String text
@@ -44,7 +45,6 @@ while index < text.length:
 	associate prefix with the next code (if available)
 	index += prefix.length
 write out EOF and close
-
      */
     private static void compress() {
         String input = BinaryStdIn.readString();
@@ -60,10 +60,29 @@ write out EOF and close
             }
             index += prefix.length();
         }
+
+        BinaryStdOut.write(EOF, CODE_SIZE);
+        BinaryStdOut.close();
     }
 
-    private static void expand() {
+    /*
+    When expanding, if we see a code that doesn't exist yet, we know it must be the next code.
 
+    Its String is given to us by appending to our current prefix, p:
+
+	new String = p + p's first letter
+     */
+    private static void expand() {
+        int current_base = BinaryStdIn.readInt(CODE_SIZE);
+        while (code != EOF) {
+            int next_base = BinaryStdIn.readInt(CODE_SIZE);
+            // The current code is a character, so we can just write it out
+            if (current_base < 256)
+            {
+                BinaryStdOut.write(current_base, 8);
+                tst.insert((char)current_base + , code);
+            }
+        }
     }
 
     public static void main(String[] args) {
