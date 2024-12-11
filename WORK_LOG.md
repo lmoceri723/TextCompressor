@@ -10,6 +10,7 @@ Name: YOUR NAME HERE
 | 12/5  | 10:20-10:50 |                                                                                                         I realized that I didn't actually have a working compress function. I forgot to write the non-code portions of the data. I fixed this issue, and wrote expand. I started testing it but I have bugs that I haven't yet figured out. |
 | 12/10 |  8:55-9:25  |                                                                                                                                                I listened to Mr. Blick's presentation on the edge case, and then I started coding the compress method. I believe it will be fully working, and I just now have to write expand and test it. |
 | 12/10 |  9:25-9:55  |                                                                                                      I started out by fixing my broken github, which took a bit of time away. Then, I realized that I was never writing out EOF and closing, so I did that in compress. Then I got started on writing expand, and I'm about 20% or so done. |
+| 12/11 |  2:00-2:30  |                                                                                                              I realized that a TST is not needed for expand, which simplified it exponentially. I was able to quickly write it, and with a bit of debugging got my code to work with abra. I haven't yet had the chance to test the others. |
 
 
 To add a new row to the table, click into a cell and then hit shift-enter.
