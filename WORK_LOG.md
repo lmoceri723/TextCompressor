@@ -1,4 +1,4 @@
-Name: YOUR NAME HERE
+Name: Landon Moceri
 
 | Date  |    Time     |                                                                                                                                                                                                                                                                                                                                      Update |
 |:------|:-----------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
@@ -11,6 +11,7 @@ Name: YOUR NAME HERE
 | 12/10 |  8:55-9:25  |                                                                                                                                                I listened to Mr. Blick's presentation on the edge case, and then I started coding the compress method. I believe it will be fully working, and I just now have to write expand and test it. |
 | 12/10 |  9:25-9:55  |                                                                                                      I started out by fixing my broken github, which took a bit of time away. Then, I realized that I was never writing out EOF and closing, so I did that in compress. Then I got started on writing expand, and I'm about 20% or so done. |
 | 12/11 |  2:00-2:30  |                                                                                                              I realized that a TST is not needed for expand, which simplified it exponentially. I was able to quickly write it, and with a bit of debugging got my code to work with abra. I haven't yet had the chance to test the others. |
+| 12/11 |  2:30-3:00  |                                                                        I tested the other cases and fixed an inefficiency where I was using substring instead of a faster TST method. Then, I wrote comments to document my code and thinking. I pass all test cases. I didn't have enough time to finish this worklog and commit in class. |
 
 
 To add a new row to the table, click into a cell and then hit shift-enter.
