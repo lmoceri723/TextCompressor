@@ -31,62 +31,100 @@
 // TODO final day is Wednesday in the morning
 public class TextCompressor {
 
+    // Constants
     static final int CODE_SIZE = 12;
+    static final int MAX_CODE = 4096;
+    static final int NUM_ASCII_CHARS = 256;
     static final int EOF = 256;
 
+    // Compresses text input using LZW compression
     private static void compress() {
+        // Initialize a TST to facilitate string to code translations
         TST tst = new TST();
-        for (int i = 0; i < 256; i++) {
+        // Add all the ASCII characters to the TST
+        for (int i = 0; i < NUM_ASCII_CHARS; i++) {
             tst.insert("" + (char) i, i);
         }
-        int code = 257;
+        // Initialize the code to be the first available code after ASCII and EOF
+        int code = NUM_ASCII_CHARS + 1;
 
+        // Read the input as a string
         String input = BinaryStdIn.readString();
+        // Loop through each character in the input
         int index = 0;
         while (index < input.length()) {
-            String prefix = tst.getLongestPrefix(input.substring(index));
+            // Get the longest prefix in the TST that matches the current substring
+            String prefix = tst.getLongestPrefix(input, index);
+            // Get the code for the prefix
             int local_code = tst.lookup(prefix);
+
+            // Write the code to the output
             BinaryStdOut.write(local_code, CODE_SIZE);
+            // Add the next character to the TST
             int prefixLength = prefix.length();
-            if (index + prefixLength < input.length() && code < 4096) {
+            if (index + prefixLength < input.length() && code < MAX_CODE) {
                 tst.insert(input.substring(index, index + prefixLength + 1), code);
+                // Increment the code
                 code++;
             }
+            // Move the index to the next character
             index += prefixLength;
         }
-        BinaryStdOut.write(EOF, CODE_SIZE);  // Write EOF
+        // Write EOF to the output and close the output
+        BinaryStdOut.write(EOF, CODE_SIZE);
         BinaryStdOut.close();
     }
 
+    // Expands LZW compressed text back to its original form
     private static void expand() {
+        // Create a map from codes to strings
         String[] codeToString = new String[(int) Math.pow(2, CODE_SIZE)];
-        for (int i = 0; i < 256; i++) {
+        // Fill it with the ASCII characters
+        for (int i = 0; i < NUM_ASCII_CHARS; i++) {
             codeToString[i] = "" + (char) i;
         }
-        int code = 257;
 
+        // Initialize the code to be the first available code after ASCII and EOF
+        int code = NUM_ASCII_CHARS + 1;
+
+        // Read the first code from the input
         int current_base = BinaryStdIn.readInt(CODE_SIZE);
-        if (current_base == EOF) return; // expanded message is empty string
+        // If the input is EOF, we're done
+        if (current_base == EOF)
+        {
+            return;
+        }
+        // Get the string for the first code
         String current_string = codeToString[current_base];
 
         while (true) {
+            // Write the current string to the output
             BinaryStdOut.write(current_string);
+            // Get the next base, handle EOF, and get the next string
             int next_base = BinaryStdIn.readInt(CODE_SIZE);
             if (next_base == EOF) {
                 break;
             }
             String next_string;
             if (next_base < code) {
+                // If the next base is in the map, get the string
                 next_string = codeToString[next_base];
             } else {
+                // If the next base is not in the map, it has to be the edge case
+                // That we talked about in class. The next string can only be the current string
+                // Plus the first character of the current string
                 next_string = current_string + current_string.charAt(0);
             }
+            // Add the current string plus the first character of the next string to the map
             if (code < codeToString.length) {
                 codeToString[code] = current_string + next_string.charAt(0);
+                // Increment the code
                 code++;
             }
+            // Set the current string to the next string for the next iteration
             current_string = next_string;
         }
+        // Close the output when done
         BinaryStdOut.close();
     }
 
