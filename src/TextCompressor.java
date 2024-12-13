@@ -78,7 +78,7 @@ public class TextCompressor {
     // Expands LZW compressed text back to its original form
     private static void expand() {
         // Create a map from codes to strings
-        String[] codeToString = new String[(int) Math.pow(2, CODE_SIZE)];
+        String[] codeToString = new String[1 << CODE_SIZE];
         // Fill it with the ASCII characters
         for (int i = 0; i < NUM_ASCII_CHARS; i++) {
             codeToString[i] = "" + (char) i;
